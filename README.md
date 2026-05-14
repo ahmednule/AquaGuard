@@ -1,6 +1,6 @@
 # AquaGuard — Smart Community Water Monitor
 
-> BIT1210 Physics for Computing · Mount Kenya University · 2025
+> BIT1210 Physics for Computing · Mount Kenya University · 2026
 
 A full-stack IoT dashboard for monitoring community water quality, level, theft detection and M-Pesa billing.
 

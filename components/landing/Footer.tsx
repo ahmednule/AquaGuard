@@ -18,7 +18,7 @@ export default function Footer() {
         </div>
 
         <p className="text-sm text-slate-600 text-center">
-          AquaGuard · BIT1210 Physics for Computing · Mount Kenya University · 2025
+          AquaGuard · BIT1210 Physics for Computing · Mount Kenya University · 2026
         </p>
 
         <div className="flex items-center gap-6">

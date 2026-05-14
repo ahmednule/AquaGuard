@@ -47,7 +47,7 @@ export default function CTASection() {
 
             {/* Trust note */}
             <p className="text-xs text-slate-600 mt-8">
-              BIT1210 Physics for Computing · Mount Kenya University · Group Project 2025
+              BIT1210 Physics for Computing · Mount Kenya University · Group Project 2026
             </p>
           </div>
         </div>

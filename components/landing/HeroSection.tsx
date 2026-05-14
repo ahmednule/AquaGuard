@@ -72,7 +72,7 @@ export default function HeroSection() {
           <div className="animate-float-up inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-8">
             <span className="w-2 h-2 rounded-full bg-aqua-400 animate-pulse-ring" />
             <span className="text-xs font-medium text-aqua-300 font-mono">
-              BIT1210 · Mount Kenya University · 2025
+              BIT1210 · Mount Kenya University · 2026
             </span>
           </div>
 
