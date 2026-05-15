@@ -19,7 +19,6 @@ export default function CTASection() {
             </span>
             <h2
               className="text-4xl md:text-5xl font-black text-white mb-6"
-              style={{ fontFamily: "var(--font-display)" }}
             >
               Clean water, tracked
               <br />

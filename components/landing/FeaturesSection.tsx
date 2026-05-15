@@ -78,7 +78,6 @@ export default function FeaturesSection() {
           </span>
           <h2
             className="text-4xl md:text-5xl font-black text-white mb-6"
-            style={{ fontFamily: "var(--font-display)" }}
           >
             Every angle of your water,
             <br />
@@ -118,7 +117,6 @@ export default function FeaturesSection() {
 
                 <h3
                   className="text-lg font-bold text-white mb-3"
-                  style={{ fontFamily: "var(--font-display)" }}
                 >
                   {feature.title}
                 </h3>

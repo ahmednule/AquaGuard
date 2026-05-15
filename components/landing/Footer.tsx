@@ -11,7 +11,6 @@ export default function Footer() {
           </div>
           <span
             className="text-base font-bold text-white"
-            style={{ fontFamily: "var(--font-display)" }}
           >
             Aqua<span className="text-aqua-400">Guard</span>
           </span>

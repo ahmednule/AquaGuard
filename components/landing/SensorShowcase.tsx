@@ -55,7 +55,6 @@ export default function SensorShowcase() {
           </span>
           <h2
             className="text-4xl md:text-5xl font-black text-white mb-6"
-            style={{ fontFamily: "var(--font-display)" }}
           >
             Four sensors.
             <br />
@@ -95,7 +94,6 @@ export default function SensorShowcase() {
                     </span>
                     <h3
                       className="text-xl font-bold text-white"
-                      style={{ fontFamily: "var(--font-display)" }}
                     >
                       {sensor.name}
                     </h3>

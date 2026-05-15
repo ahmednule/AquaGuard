@@ -46,7 +46,6 @@ export default function HowItWorks() {
           </span>
           <h2
             className="text-4xl md:text-5xl font-black text-white mb-6"
-            style={{ fontFamily: "var(--font-display)" }}
           >
             From sensor to
             <br />
@@ -81,7 +80,6 @@ export default function HowItWorks() {
                   <div className="flex items-start justify-between gap-4 mb-3">
                     <h3
                       className="text-lg font-bold text-white"
-                      style={{ fontFamily: "var(--font-display)" }}
                     >
                       {step.title}
                     </h3>

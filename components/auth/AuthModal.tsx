@@ -134,7 +134,6 @@ export default function AuthModal() {
               <div>
                 <h2
                   className="text-lg font-bold text-white leading-tight"
-                  style={{ fontFamily: "var(--font-display)" }}
                 >
                   {mode === "login" ? "Welcome back" : "Join AquaGuard"}
                 </h2>
@@ -179,7 +178,6 @@ export default function AuthModal() {
               </div>
               <h3
                 className="text-xl font-bold text-white mb-2"
-                style={{ fontFamily: "var(--font-display)" }}
               >
                 {mode === "login" ? "Welcome back!" : "Account created!"}
               </h3>

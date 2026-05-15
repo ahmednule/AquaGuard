@@ -41,57 +41,49 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative min-h-screen mesh-bg flex items-center pt-24 pb-16 overflow-hidden">
+    <section className="relative min-h-[100dvh] mesh-bg flex items-center pt-20 pb-12 sm:pt-24 sm:pb-16 overflow-x-hidden">
       {/* Animated background blobs */}
       <div
-        className="animate-blob absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full opacity-20"
+        className="animate-blob absolute -top-40 -left-40 w-[300px] sm:w-[500px] md:w-[600px] h-[300px] sm:h-[500px] md:h-[600px] rounded-full opacity-20"
         style={{
           background: "radial-gradient(circle, #0e9e7f 0%, transparent 70%)",
           animationDelay: "0s",
         }}
       />
       <div
-        className="animate-blob absolute -bottom-20 -right-20 w-[500px] h-[500px] rounded-full opacity-15"
+        className="animate-blob absolute -bottom-20 -right-20 w-[250px] sm:w-[400px] md:w-[500px] h-[250px] sm:h-[400px] md:h-[500px] rounded-full opacity-15"
         style={{
           background: "radial-gradient(circle, #0a7d64 0%, transparent 70%)",
           animationDelay: "3s",
         }}
       />
       <div
-        className="animate-blob absolute top-1/2 left-1/2 w-[400px] h-[400px] rounded-full opacity-10 -translate-x-1/2 -translate-y-1/2"
+        className="animate-blob absolute top-1/2 left-1/2 w-[200px] sm:w-[300px] md:w-[400px] h-[200px] sm:h-[300px] md:h-[400px] rounded-full opacity-10 -translate-x-1/2 -translate-y-1/2"
         style={{
           background: "radial-gradient(circle, #3dd4b0 0%, transparent 70%)",
           animationDelay: "5s",
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-10 lg:gap-16 items-start lg:items-center">
         {/* Left — copy */}
         <div>
-          {/* Badge */}
-          <div className="animate-float-up inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-8">
-            <span className="w-2 h-2 rounded-full bg-aqua-400 animate-pulse-ring" />
-            <span className="text-xs font-medium text-aqua-300 font-mono">
-              BIT1210 · Mount Kenya University · 2026
-            </span>
-          </div>
 
           <h1
-            className="animate-float-up delay-100 text-5xl md:text-6xl xl:text-7xl font-black text-white mb-6 leading-[1.0]"
-            style={{ fontFamily: "var(--font-display)" }}
+            className="animate-float-up delay-100 text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-black text-white mb-5 sm:mb-6 leading-[1.05]"
           >
             Smart water.
             <br />
             <span className="text-gradient">Safer communities.</span>
           </h1>
 
-          <p className="animate-float-up delay-200 text-lg text-slate-400 leading-relaxed mb-10 max-w-lg">
+          <p className="animate-float-up delay-200 text-base sm:text-lg text-slate-400 leading-relaxed mb-8 sm:mb-10 max-w-lg">
             AquaGuard is an IoT-powered water monitoring system that detects contamination,
             tracks usage, alerts on theft, and bills households via M-Pesa — all in real time.
           </p>
 
           {/* Trust badges */}
-          <div className="animate-float-up delay-300 flex flex-wrap gap-3 mb-10">
+          <div className="animate-float-up delay-300 flex flex-wrap gap-2 sm:gap-3 mb-8 sm:mb-10">
             {[
               { icon: Shield, label: "Contamination alerts" },
               { icon: Wifi, label: "Real-time monitoring" },
@@ -108,17 +100,17 @@ export default function HeroSection() {
           </div>
 
           {/* CTA buttons */}
-          <div className="animate-float-up delay-400 flex flex-wrap gap-4">
+          <div className="animate-float-up delay-400 flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
             <button
               onClick={() => openAuth("signup")}
-              className="btn-primary flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-white rounded-2xl"
+              className="btn-primary flex items-center justify-center gap-2 px-7 py-3.5 text-sm font-semibold text-white rounded-2xl sm:w-auto w-full"
             >
               Get started free
               <ArrowRight size={16} />
             </button>
             <button
               onClick={() => openAuth("login")}
-              className="flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-slate-300 glass rounded-2xl border border-white/10 hover:border-aqua-500/40 transition-all"
+              className="flex items-center justify-center gap-2 px-7 py-3.5 text-sm font-semibold text-slate-300 glass rounded-2xl border border-white/10 hover:border-aqua-500/40 transition-all sm:w-auto w-full"
             >
               Sign in to dashboard
             </button>
@@ -126,8 +118,8 @@ export default function HeroSection() {
         </div>
 
         {/* Right — Live sensor preview card */}
-        <div className="animate-float-up delay-300 flex justify-center">
-          <div className="w-full max-w-sm">
+        <div className="animate-float-up delay-300 flex justify-center lg:justify-end">
+          <div className="w-full max-w-sm sm:max-w-md lg:max-w-sm">
             {/* Card header */}
             <div className="glass-strong rounded-3xl p-6 border border-white/10 shadow-2xl shadow-black/40">
               <div className="flex items-center justify-between mb-6">
@@ -137,7 +129,6 @@ export default function HeroSection() {
                   </p>
                   <h3
                     className="text-sm font-semibold text-white"
-                    style={{ fontFamily: "var(--font-display)" }}
                   >
                     Tank A — Block 4
                   </h3>

@@ -10,7 +10,6 @@ export default function DashboardPage() {
         </div>
         <h1
           className="text-4xl font-black text-white mb-4"
-          style={{ fontFamily: "var(--font-display)" }}
         >
           Dashboard
         </h1>

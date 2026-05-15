@@ -39,7 +39,6 @@ export default function Navbar() {
             <Droplets size={18} className="text-white" />
           </div>
           <span
-            style={{ fontFamily: "var(--font-display)" }}
             className="text-lg font-bold text-white tracking-tight"
           >
             Aqua<span className="text-aqua-400">Guard</span>

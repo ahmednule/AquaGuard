@@ -14,7 +14,6 @@ export default function StatsBar() {
             <div key={stat.label} className="text-center">
               <p
                 className="text-3xl md:text-4xl font-black text-white mb-1"
-                style={{ fontFamily: "var(--font-display)" }}
               >
                 <span className="text-gradient">
                   {stat.value}
