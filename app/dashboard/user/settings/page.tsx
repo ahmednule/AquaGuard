@@ -1,5 +1,10 @@
 "use client";
 
+import { useState } from "react";
+import {
+  Settings, User, Bell, Shield, Smartphone,
+  Moon, Globe, Save, ChevronRight,
+} from "lucide-react";
 import { CREDENTIALS } from "@/lib/auth";
 
 const panel = { background: "rgba(255,255,255,0.032)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 18, padding: 24 };
@@ -22,8 +27,8 @@ function Toggle({ defaultOn = false }: { defaultOn?: boolean }) {
       className="flex-shrink-0 transition-all duration-200"
       style={{
         width: 40, height: 22, borderRadius: 11,
-        background: on ? "rgba(14,158,127,0.85)" : "rgba(255,255,255,0.1)",
-        border: on ? "1px solid rgba(14,158,127,0.4)" : "1px solid rgba(255,255,255,0.1)",
+        background: on ? "rgba(37,99,235,0.85)" : "rgba(255,255,255,0.1)",
+        border: on ? "1px solid rgba(37,99,235,0.4)" : "1px solid rgba(255,255,255,0.1)",
         position: "relative", cursor: "pointer",
       }}
     >
@@ -52,22 +57,21 @@ function SettingRow({ label, sub, children }: { label: string; sub?: string; chi
   );
 }
 
-export default function SettingsPage() {
+export default function UserSettingsPage() {
   const [tab, setTab] = useState<Tab>("profile");
-  const role = "caretaker";
+  const role = "user";
   const creds = CREDENTIALS[role];
-  const isUser = false;
 
   return (
     <div className="flex flex-col gap-6 max-w-[1380px]">
 
       {/* Header */}
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-600 mb-1">Settings</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-600 mb-1">Account</p>
         <h1 className="font-extrabold text-slate-50" style={{ fontSize: "clamp(22px,3vw,32px)", letterSpacing: "-0.03em" }}>
-          Account & preferences
+          Settings & Preferences
         </h1>
-        <p className="text-sm text-slate-500 mt-1">Manage your profile, notifications, and platform settings</p>
+        <p className="text-sm text-slate-500 mt-1">Manage your profile, notifications, and app behavior</p>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-5 items-start">
@@ -82,13 +86,13 @@ export default function SettingsPage() {
                   className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[9px] text-[13px] font-medium text-left transition-all duration-150"
                   style={
                     tab === key
-                      ? { background: "rgba(14,158,127,0.12)", color: "#e2e8f0" }
+                      ? { background: "rgba(59,130,246,0.12)", color: "#e2e8f0" }
                       : { color: "#475569" }
                   }
                 >
-                  <Icon size={14} style={tab === key ? { color: "#3dd4b0" } : {}} />
+                  <Icon size={14} style={tab === key ? { color: "#60a5fa" } : {}} />
                   {label}
-                  {tab === key && <ChevronRight size={12} className="ml-auto" style={{ color: "#3dd4b0" }} />}
+                  {tab === key && <ChevronRight size={12} className="ml-auto" style={{ color: "#60a5fa" }} />}
                 </button>
               </li>
             ))}
@@ -109,7 +113,7 @@ export default function SettingsPage() {
                   className="flex items-center justify-center rounded-[14px] text-xl font-bold text-white"
                   style={{
                     width: 56, height: 56,
-                    background: isUser ? "linear-gradient(135deg,#2563eb,#1e40af)" : "linear-gradient(135deg,#0e9e7f,#075c4a)"
+                    background: "linear-gradient(135deg,#2563eb,#1e40af)"
                   }}
                 >
                   {creds.name.charAt(0)}
@@ -117,7 +121,7 @@ export default function SettingsPage() {
                 <div>
                   <p className="text-sm font-semibold text-slate-200">{creds.name}</p>
                   <p className="text-xs text-slate-500">{creds.email}</p>
-                  <button className="text-[11.5px] font-semibold mt-1" style={{ color: isUser ? "#60a5fa" : "#3dd4b0" }}>Change photo</button>
+                  <button className="text-[11.5px] font-semibold mt-1" style={{ color: "#60a5fa" }}>Change photo</button>
                 </div>
               </div>
 
@@ -125,7 +129,7 @@ export default function SettingsPage() {
                 { label: "Full name",    placeholder: creds.name     },
                 { label: "Email",        placeholder: creds.email  },
                 { label: "Phone",        placeholder: "+254 700 000 000"    },
-                { label: "Community ID", placeholder: isUser ? "Block B, Unit 04" : "COMM-NAIROBI-001"    },
+                { label: "Community ID", placeholder: "Block B, Unit 04"    },
               ].map((f) => (
                 <div key={f.label}>
                   <label className="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-[0.08em]">{f.label}</label>
@@ -133,7 +137,7 @@ export default function SettingsPage() {
                     defaultValue={f.placeholder}
                     className="w-full text-sm text-slate-200 rounded-[10px] px-3.5 py-2.5 outline-none transition-all"
                     style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
-                    onFocus={(e) => (e.target.style.borderColor = "#0e9e7f")}
+                    onFocus={(e) => (e.target.style.borderColor = "#3b82f6")}
                     onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
                   />
                 </div>
@@ -143,9 +147,9 @@ export default function SettingsPage() {
                 className="flex items-center gap-2 text-[13px] font-bold text-white mt-2 transition-all hover:opacity-90"
                 style={{
                   padding: "10px 20px",
-                  background: isUser ? "linear-gradient(135deg,#2563eb,#1e40af)" : "linear-gradient(135deg,#0e9e7f,#075c4a)",
+                  background: "linear-gradient(135deg,#2563eb,#1e40af)",
                   borderRadius: 10, border: "none", cursor: "pointer",
-                  boxShadow: isUser ? "0 4px 16px rgba(37,99,235,0.3)" : "0 4px 16px rgba(14,158,127,0.3)"
+                  boxShadow: "0 4px 16px rgba(37,99,235,0.3)"
                 }}
               >
                 <Save size={14} /> Save changes
@@ -184,7 +188,7 @@ export default function SettingsPage() {
                 className="flex items-center gap-2 text-[13px] font-bold text-white mt-1 hover:opacity-90"
                 style={{
                   padding: "10px 20px",
-                  background: isUser ? "linear-gradient(135deg,#2563eb,#1e40af)" : "linear-gradient(135deg,#0e9e7f,#075c4a)",
+                  background: "linear-gradient(135deg,#2563eb,#1e40af)",
                   borderRadius: 10, border: "none", cursor: "pointer"
                 }}
               >
@@ -206,7 +210,7 @@ export default function SettingsPage() {
                 <p className="text-xs font-semibold text-slate-500 mb-3 uppercase tracking-[0.08em]">Accent color</p>
                 <div className="flex gap-3">
                   {["#0e9e7f","#3b82f6","#8b5cf6","#f59e0b","#ef4444"].map((c) => (
-                    <button key={c} className="w-7 h-7 rounded-full transition-transform hover:scale-110" style={{ background: c, border: c === "#0e9e7f" ? "2px solid #fff" : "2px solid transparent", cursor: "pointer" }} />
+                    <button key={c} className="w-7 h-7 rounded-full transition-transform hover:scale-110" style={{ background: c, border: c === "#3b82f6" ? "2px solid #fff" : "2px solid transparent", cursor: "pointer" }} />
                   ))}
                 </div>
               </div>

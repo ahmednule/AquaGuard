@@ -44,7 +44,7 @@ const userNav = [
     items: [
       { label: "Alerts",   href: "/dashboard/user/alerts",  icon: Bell,    badge: "1" },
       { label: "Billing",  href: "/dashboard/user/billing", icon: Wallet },
-      { label: "Settings", href: "/dashboard/settings",     icon: Settings },
+      { label: "Settings", href: "/dashboard/user/settings",icon: Settings },
     ] as NavItem[],
   },
 ];
