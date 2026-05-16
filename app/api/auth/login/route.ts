@@ -5,8 +5,9 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { email, password } = body ?? {};
+    const isProduction = String(process.env.NODE_ENV) === "production";
 
-    if (process.env.NODE_ENV !== "development") {
+    if (!isProduction) {
       return NextResponse.json({ error: "Not allowed in production" }, { status: 403 });
     }
 
@@ -16,7 +17,7 @@ export async function POST(req: Request) {
       res.cookies.set("aqua_auth", token, {
         httpOnly: true,
         path: "/",
-        secure: process.env.NODE_ENV === "production",
+        secure: isProduction,
         sameSite: "lax",
         maxAge: 60 * 60 * 24 * 7,
       });
