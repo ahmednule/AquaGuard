@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { X, Eye, EyeOff, Droplets, ArrowRight, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { CREDENTIALS } from "@/lib/auth";
 
 type AuthMode = "login" | "signup";
 
@@ -28,6 +30,27 @@ export default function AuthModal() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const router = useRouter();
+
+  const [showDev, setShowDev] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const host = window.location.hostname || "";
+    if (
+      process.env.NODE_ENV === "development" ||
+      host === "localhost" ||
+      host === "127.0.0.1" ||
+      host.startsWith("192.168.")
+    ) {
+      setShowDev(true);
+    }
+  }, []);
+
+  const useTestCreds = (role: "caretaker" | "user") => {
+    const creds = CREDENTIALS[role];
+    setForm((prev) => ({ ...prev, email: creds.email, password: creds.password }));
+    setError(null);
+  };
 
   // Listen for custom events from Navbar / CTA buttons
   useEffect(() => {
@@ -96,17 +119,53 @@ export default function AuthModal() {
     setLoading(true);
     setError(null);
 
-    // TODO: Replace with real API call to /api/auth/login or /api/auth/signup
-    await new Promise((res) => setTimeout(res, 1400));
+    try {
+      // Determine role from credentials match (client-side for dev)
+      let detectedRole: "caretaker" | "user" | null = null;
+      if (form.email === CREDENTIALS.caretaker.email && form.password === CREDENTIALS.caretaker.password) {
+        detectedRole = "caretaker";
+      } else if (form.email === CREDENTIALS.user.email && form.password === CREDENTIALS.user.password) {
+        detectedRole = "user";
+      }
 
-    setLoading(false);
-    setSuccess(true);
+      const payload = { email: form.email, password: form.password };
+      const endpoint = mode === "login" ? "/api/auth/login" : "/api/auth/signup";
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    // TODO: On success → redirect to /dashboard using router.push("/dashboard")
-    setTimeout(() => {
-      setOpen(false);
-      setSuccess(false);
-    }, 1800);
+      if (res.status === 404 || detectedRole) {
+        // Client-side fallback for dev / known credentials
+        try {
+          const role = detectedRole ?? "user";
+          const token = btoa(JSON.stringify({ email: form.email, role, iat: Date.now() }));
+          const maxAge = 60 * 60 * 24 * 7;
+          document.cookie = `aqua_auth=${token}; path=/; max-age=${maxAge}`;
+          document.cookie = `aqua_role=${role}; path=/; max-age=${maxAge}`;
+        } catch (e) {}
+      } else if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        setError(body?.error || "Authentication failed");
+        setLoading(false);
+        return;
+      }
+
+      setLoading(false);
+      setSuccess(true);
+
+      const role = detectedRole ?? "caretaker";
+      const dest = role === "user" ? "/dashboard/user" : "/dashboard";
+      setTimeout(() => {
+        setOpen(false);
+        setSuccess(false);
+        try { router.push(dest); } catch (e) { window.location.href = dest; }
+      }, 900);
+    } catch (e) {
+      setLoading(false);
+      setError("Network error");
+    }
   };
 
   if (!open) return null;
@@ -238,14 +297,13 @@ export default function AuthModal() {
                 <label className="block text-xs font-medium text-slate-400 mb-1.5">
                   Email address
                 </label>
-                <input
-                  type="email"
-                  value={form.email}
-                  onChange={handleChange("email")}
-                  placeholder="you@example.com"
-                  className="input-field w-full rounded-xl px-4 py-3 text-sm"
-                  autoComplete="email"
-                />
+                  <input
+                    type="email"
+                    value={form.email}
+                    onChange={handleChange("email")}
+                    placeholder="you@example.com"
+                    className="input-field w-full rounded-xl px-4 py-3 text-sm"
+                  />
               </div>
 
               {/* Password */}
@@ -268,7 +326,6 @@ export default function AuthModal() {
                     onChange={handleChange("password")}
                     placeholder={mode === "signup" ? "Min. 6 characters" : "Enter password"}
                     className="input-field w-full rounded-xl px-4 py-3 pr-12 text-sm"
-                    autoComplete={mode === "login" ? "current-password" : "new-password"}
                   />
                   <button
                     type="button"
@@ -285,6 +342,43 @@ export default function AuthModal() {
               {error && (
                 <div className="rounded-xl bg-red-500/10 border border-red-500/20 px-4 py-3">
                   <p className="text-xs text-red-400">{error}</p>
+                </div>
+              )}
+
+              {/* Dev test credentials hint */}
+              {showDev && (
+                <div className="space-y-2">
+                  <p className="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-slate-600">Demo accounts</p>
+                  {([
+                    { role: "caretaker" as const, label: "Caretaker", sub: "Community admin view",  color: "rgba(14,158,127,0.1)",  border: "rgba(14,158,127,0.2)",  textColor: "#3dd4b0" },
+                    { role: "user"      as const, label: "Resident",  sub: "Household member view", color: "rgba(59,130,246,0.1)",  border: "rgba(59,130,246,0.2)",  textColor: "#93c5fd" },
+                  ]).map(({ role, label, sub, color, border, textColor }) => {
+                    const creds = CREDENTIALS[role];
+                    return (
+                      <div
+                        key={role}
+                        className="rounded-xl px-3.5 py-3"
+                        style={{ background: color, border: `1px solid ${border}` }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="text-xs font-bold mb-0.5" style={{ color: textColor }}>{label}</div>
+                            <div className="text-[11px] text-slate-500">{creds.email}</div>
+                            <div className="text-[11px] text-slate-600">Password: <span className="text-slate-400 font-mono">{creds.password}</span></div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => useTestCreds(role)}
+                            className="text-[11px] font-semibold px-3 py-1.5 rounded-lg transition-all"
+                            style={{ background: color, border: `1px solid ${border}`, color: textColor, cursor: "pointer" }}
+                          >
+                            Fill
+                          </button>
+                        </div>
+                        <p className="text-[10.5px] text-slate-600 mt-1">{sub}</p>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
 

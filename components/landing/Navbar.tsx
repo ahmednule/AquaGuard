@@ -50,6 +50,13 @@ export default function Navbar() {
     return () => window.removeEventListener("hashchange", sync);
   }, []);
 
+  // Close mobile menu when navigating
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const t = setTimeout(() => setMobileOpen(false), 60);
+    return () => clearTimeout(t);
+  }, [pathname, mobileOpen]);
+
   const openAuth = (mode: "login" | "signup") => {
     window.dispatchEvent(new CustomEvent("aquaguard:auth", { detail: { mode } }));
   };
@@ -135,10 +142,9 @@ export default function Navbar() {
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden p-1 text-slate-300 hover:text-white transition-colors"
+            className="md:hidden p-1 text-slate-300 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-aqua-400"
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Toggle menu"
-            aria-expanded={mobileOpen}
           >
             {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>

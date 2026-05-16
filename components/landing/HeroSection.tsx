@@ -44,25 +44,13 @@ export default function HeroSection() {
     <section className="relative min-h-[100dvh] mesh-bg flex items-center pt-20 pb-12 sm:pt-24 sm:pb-16 overflow-x-hidden">
       {/* Animated background blobs */}
       <div
-        className="animate-blob absolute -top-40 -left-40 w-[300px] sm:w-[500px] md:w-[600px] h-[300px] sm:h-[500px] md:h-[600px] rounded-full opacity-20"
-        style={{
-          background: "radial-gradient(circle, #0e9e7f 0%, transparent 70%)",
-          animationDelay: "0s",
-        }}
+        className="animate-blob delay-100 absolute -top-40 -left-40 w-[300px] sm:w-[500px] md:w-[600px] h-[300px] sm:h-[500px] md:h-[600px] rounded-full opacity-20 bg-[radial-gradient(circle,_#0e9e7f_0%25,_transparent_70%25)]"
       />
       <div
-        className="animate-blob absolute -bottom-20 -right-20 w-[250px] sm:w-[400px] md:w-[500px] h-[250px] sm:h-[400px] md:h-[500px] rounded-full opacity-15"
-        style={{
-          background: "radial-gradient(circle, #0a7d64 0%, transparent 70%)",
-          animationDelay: "3s",
-        }}
+        className="animate-blob delay-300 absolute -bottom-20 -right-20 w-[250px] sm:w-[400px] md:w-[500px] h-[250px] sm:h-[400px] md:h-[500px] rounded-full opacity-15 bg-[radial-gradient(circle,_#0a7d64_0%25,_transparent_70%25)]"
       />
       <div
-        className="animate-blob absolute top-1/2 left-1/2 w-[200px] sm:w-[300px] md:w-[400px] h-[200px] sm:h-[300px] md:h-[400px] rounded-full opacity-10 -translate-x-1/2 -translate-y-1/2"
-        style={{
-          background: "radial-gradient(circle, #3dd4b0 0%, transparent 70%)",
-          animationDelay: "5s",
-        }}
+        className="animate-blob delay-500 absolute top-1/2 left-1/2 w-[200px] sm:w-[300px] md:w-[400px] h-[200px] sm:h-[300px] md:h-[400px] rounded-full opacity-10 -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(circle,_#3dd4b0_0%25,_transparent_70%25)]"
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-10 lg:gap-16 items-start lg:items-center">
@@ -70,14 +58,14 @@ export default function HeroSection() {
         <div>
 
           <h1
-            className="animate-float-up delay-100 text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-black text-white mb-5 sm:mb-6 leading-[1.05]"
+            className="animate-float-up delay-100 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white mb-4 sm:mb-5 leading-tight"
           >
             Smart water.
             <br />
             <span className="text-gradient">Safer communities.</span>
           </h1>
 
-          <p className="animate-float-up delay-200 text-base sm:text-lg text-slate-400 leading-relaxed mb-8 sm:mb-10 max-w-lg">
+          <p className="animate-float-up delay-200 text-sm sm:text-base text-slate-400 leading-relaxed mb-6 sm:mb-8 max-w-lg">
             AquaGuard is an IoT-powered water monitoring system that detects contamination,
             tracks usage, alerts on theft, and bills households via M-Pesa — all in real time.
           </p>
@@ -149,11 +137,9 @@ export default function HeroSection() {
                 </div>
                 <div className="h-3 bg-slate-800 rounded-full overflow-hidden">
                   <div
-                    className="h-full rounded-full transition-all duration-1000 ease-in-out"
-                    style={{
-                      width: `${sensors.level}%`,
-                      background: "linear-gradient(90deg, #0a7d64, #3dd4b0)",
-                    }}
+                    className={`h-full rounded-full transition-all duration-1000 ease-in-out bg-[linear-gradient(90deg,_#0a7d64,_#3dd4b0)] w-[${Math.round(
+                      sensors.level
+                    )}%]`}
                   />
                 </div>
                 <p className="text-xs text-slate-600 mt-1.5">
