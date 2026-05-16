@@ -31,20 +31,7 @@ export default function AuthModal() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const router = useRouter();
-
-  const [showDev, setShowDev] = useState(false);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const host = window.location.hostname || "";
-    if (
-      process.env.NODE_ENV === "development" ||
-      host === "localhost" ||
-      host === "127.0.0.1" ||
-      host.startsWith("192.168.")
-    ) {
-      setShowDev(true);
-    }
-  }, []);
+  const showDemoAccounts = true;
 
   const useTestCreds = (role: "caretaker" | "user") => {
     const creds = CREDENTIALS[role];
@@ -346,7 +333,7 @@ export default function AuthModal() {
               )}
 
               {/* Dev test credentials hint */}
-              {showDev && (
+              {showDemoAccounts && (
                 <div className="space-y-2">
                   <p className="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-slate-600">Demo accounts</p>
                   {([
