@@ -1,5 +1,17 @@
 "use client";
 
+import { useState } from "react";
+import {
+  Bell,
+  ChevronRight,
+  Globe,
+  Moon,
+  Save,
+  Settings,
+  Shield,
+  Smartphone,
+  User,
+} from "lucide-react";
 import { CREDENTIALS } from "@/lib/auth";
 
 const panel = { background: "rgba(255,255,255,0.032)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 18, padding: 24 };
