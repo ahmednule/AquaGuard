@@ -2,11 +2,11 @@
 
 import {
   ApolloClient,
-  ApolloProvider,
   HttpLink,
   InMemoryCache,
   gql,
 } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client/react";
 import { setContext } from "@apollo/client/link/context";
 import { useRouter } from "next/navigation";
 import {

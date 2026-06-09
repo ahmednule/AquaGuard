@@ -71,6 +71,7 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
           {children}
         </main>
       </div>
+      </div>
     </AuthGate>
   );
 }
