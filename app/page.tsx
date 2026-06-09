@@ -6,7 +6,6 @@ import HowItWorks from "@/components/landing/HowItWorks";
 import SensorShowcase from "@/components/landing/SensorShowcase";
 import CTASection from "@/components/landing/CTASection";
 import Footer from "@/components/landing/Footer";
-import AuthModal from "@/components/auth/AuthModal";
 
 export default function HomePage() {
   return (
@@ -19,8 +18,6 @@ export default function HomePage() {
       <SensorShowcase />
       <CTASection />
       <Footer />
-      {/* Auth modal is rendered globally — triggered by nav buttons */}
-      <AuthModal />
     </main>
   );
 }

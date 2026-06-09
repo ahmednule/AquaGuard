@@ -57,9 +57,7 @@ export default function Navbar() {
     return () => clearTimeout(t);
   }, [pathname, mobileOpen]);
 
-  const openAuth = (mode: "login" | "signup") => {
-    window.dispatchEvent(new CustomEvent("aquaguard:auth", { detail: { mode } }));
-  };
+
 
   const navLinks = [
     { label: "Features",     href: "#features"    },
@@ -126,18 +124,18 @@ export default function Navbar() {
 
           {/* Desktop auth */}
           <div className="hidden md:flex items-center gap-3">
-            <button
-              onClick={() => openAuth("login")}
+            <Link
+              href="/login"
               className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors"
             >
               Sign in
-            </button>
-            <button
-              onClick={() => openAuth("signup")}
+            </Link>
+            <Link
+              href="/signup"
               className="btn-primary px-5 py-2 text-sm font-semibold text-white rounded-xl"
             >
               Get started
-            </button>
+            </Link>
           </div>
 
           {/* Mobile hamburger */}
@@ -188,20 +186,23 @@ export default function Navbar() {
           {/* Divider */}
           <div className="my-6 h-px bg-white/8" />
 
+
           {/* Auth buttons — full-width, stacked */}
           <div className="flex flex-col gap-3">
-            <button
-              onClick={() => { openAuth("signup"); setMobileOpen(false); }}
-              className="w-full py-3.5 rounded-2xl text-sm font-semibold text-white btn-primary"
+            <Link
+              href="/signup"
+              className="w-full py-3.5 rounded-2xl text-sm font-semibold text-white btn-primary text-center"
+              onClick={() => setMobileOpen(false)}
             >
               Get started
-            </button>
-            <button
-              onClick={() => { openAuth("login"); setMobileOpen(false); }}
-              className="w-full py-3.5 rounded-2xl text-sm font-medium text-slate-300 border border-white/10 hover:border-aqua-500/40 hover:text-white transition-colors"
+            </Link>
+            <Link
+              href="/login"
+              className="w-full py-3.5 rounded-2xl text-sm font-medium text-slate-300 border border-white/10 hover:border-aqua-500/40 hover:text-white transition-colors text-center"
+              onClick={() => setMobileOpen(false)}
             >
               Sign in
-            </button>
+            </Link>
           </div>
 
         </div>

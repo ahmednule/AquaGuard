@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { X, Eye, EyeOff, Droplets, ArrowRight, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { CREDENTIALS } from "@/lib/auth";
+import { graphqlRequest, AUTH_MUTATIONS, isBackendAvailable, storeAuthCookies, type AuthResult } from "@/lib/graphql";
 
 type AuthMode = "login" | "signup";
 
@@ -107,43 +108,55 @@ export default function AuthModal() {
     setError(null);
 
     try {
-      // Determine role from credentials match (client-side for dev)
-      let detectedRole: "caretaker" | "user" | null = null;
-      if (form.email === CREDENTIALS.caretaker.email && form.password === CREDENTIALS.caretaker.password) {
-        detectedRole = "caretaker";
-      } else if (form.email === CREDENTIALS.user.email && form.password === CREDENTIALS.user.password) {
-        detectedRole = "user";
-      }
+      const backendAvailable = await isBackendAvailable();
 
-      const payload = { email: form.email, password: form.password };
-      const endpoint = mode === "login" ? "/api/auth/login" : "/api/auth/signup";
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      if (backendAvailable) {
+        const mutation = mode === "login" ? AUTH_MUTATIONS.LOGIN : AUTH_MUTATIONS.SIGNUP;
+        const variables = mode === "login"
+          ? { email: form.email, password: form.password }
+          : { email: form.email, password: form.password, name: form.name, role: "user", community: form.community || null, phone: form.phone || null };
 
-      if (res.status === 404 || detectedRole) {
-        // Client-side fallback for dev / known credentials
-        try {
-          const role = detectedRole ?? "user";
-          const token = btoa(JSON.stringify({ email: form.email, role, iat: Date.now() }));
+        const result = await graphqlRequest<{
+          login?: AuthResult;
+          signup?: AuthResult;
+        }>(mutation, variables);
+
+        const authResult = (mode === "login" ? result.login : result.signup) as AuthResult;
+        if (!authResult?.token) {
+          setError("Authentication failed");
+          setLoading(false);
+          return;
+        }
+
+        storeAuthCookies(authResult.token, authResult.user.role || "user");
+      } else {
+        let detectedRole: "caretaker" | "user" | null = null;
+        if (form.email === CREDENTIALS.caretaker.email && form.password === CREDENTIALS.caretaker.password) {
+          detectedRole = "caretaker";
+        } else if (form.email === CREDENTIALS.user.email && form.password === CREDENTIALS.user.password) {
+          detectedRole = "user";
+        }
+
+        if (detectedRole) {
+          const token = btoa(JSON.stringify({ email: form.email, role: detectedRole, iat: Date.now() }));
           const maxAge = 60 * 60 * 24 * 7;
           document.cookie = `aqua_auth=${token}; path=/; max-age=${maxAge}`;
-          document.cookie = `aqua_role=${role}; path=/; max-age=${maxAge}`;
-        } catch (e) {}
-      } else if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        setError(body?.error || "Authentication failed");
-        setLoading(false);
-        return;
+          document.cookie = `aqua_role=${detectedRole}; path=/; max-age=${maxAge}`;
+        } else if (mode === "signup") {
+          setError("Backend is not available. Use a demo account or start the API server.");
+          setLoading(false);
+          return;
+        } else {
+          setError("Invalid credentials");
+          setLoading(false);
+          return;
+        }
       }
 
       setLoading(false);
       setSuccess(true);
 
-      const role = detectedRole ?? "caretaker";
-      const dest = role === "user" ? "/dashboard/user" : "/dashboard";
+      const dest = "/dashboard";
       setTimeout(() => {
         setOpen(false);
         setSuccess(false);
@@ -151,7 +164,7 @@ export default function AuthModal() {
       }, 900);
     } catch (e) {
       setLoading(false);
-      setError("Network error");
+      setError(e instanceof Error ? e.message : "Network error");
     }
   };
 
