@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ApolloAuthProvider } from "@/lib/apollo-auth";
 
 export const metadata: Metadata = {
   title: "AquaGuard — Smart Community Water Monitor",
@@ -26,7 +27,9 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <ApolloAuthProvider>{children}</ApolloAuthProvider>
+      </body>
     </html>
   );
 }

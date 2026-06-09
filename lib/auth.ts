@@ -1,9 +1,9 @@
 export const CREDENTIALS = {
-  caretaker: {
-    email: "caretaker@aquaguard.io",
+  admin: {
+    email: "admin@aquaguard.io",
     password: "care123",
-    role: "caretaker" as const,
-    name: "Caretaker Admin",
+    role: "admin" as const,
+    name: "Admin",
   },
   user: {
     email: "resident@aquaguard.io",
@@ -15,14 +15,14 @@ export const CREDENTIALS = {
 
 // Legacy single credential kept for backwards compat
 export const TEST_CREDENTIALS = {
-  email: CREDENTIALS.caretaker.email,
-  password: CREDENTIALS.caretaker.password,
+  email: CREDENTIALS.admin.email,
+  password: CREDENTIALS.admin.password,
 };
 
-export function getRoleFromCookie(): "caretaker" | "user" {
-  if (typeof document === "undefined") return "caretaker";
+export function getRoleFromCookie(): "admin" | "user" {
+  if (typeof document === "undefined") return "user";
   const match = document.cookie.match(/aqua_role=([^;]+)/);
-  return (match?.[1] as "caretaker" | "user") ?? "caretaker";
+  return (match?.[1] as "admin" | "user") ?? "user";
 }
 
 export function makeMockToken(payload: Record<string, any>) {

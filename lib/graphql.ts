@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/";
 const GRAPHQL_ENDPOINT = `${API_URL}/graphql`;
 
 interface GraphQLResponse<T> {
@@ -111,10 +111,19 @@ export async function isBackendAvailable(): Promise<boolean> {
 const AUTH_COOKIE = "aqua_auth";
 const ROLE_COOKIE = "aqua_role";
 
+function normalizeRole(role: string) {
+  return role === "admin" || role === "caretaker" ? "admin" : "user";
+}
+
 export function storeAuthCookies(token: string, role: string) {
   const maxAge = 60 * 60 * 24 * 7;
   document.cookie = `${AUTH_COOKIE}=${token}; path=/; max-age=${maxAge}`;
-  document.cookie = `${ROLE_COOKIE}=${role}; path=/; max-age=${maxAge}`;
+  document.cookie = `${ROLE_COOKIE}=${normalizeRole(role)}; path=/; max-age=${maxAge}`;
+}
+
+export function clearAuthCookies() {
+  document.cookie = `${AUTH_COOKIE}=; path=/; max-age=0`;
+  document.cookie = `${ROLE_COOKIE}=; path=/; max-age=0`;
 }
 
 export function getAuthToken(): string | null {

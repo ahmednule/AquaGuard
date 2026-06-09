@@ -1,4 +1,5 @@
 import Sidebar from "@/components/dashboard/Sidebar";
+import { AuthGate } from "@/lib/apollo-auth";
 
 export const metadata = {
   title: "AquaGuard — My Home",
@@ -7,7 +8,8 @@ export const metadata = {
 
 export default function UserDashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: "#020817" }}>
+    <AuthGate allowedRoles={["user"]} redirectTo="/dashboard">
+      <div className="flex h-screen overflow-hidden" style={{ background: "#020817" }}>
       {/* Ambient blobs */}
       <div
         className="fixed pointer-events-none"
@@ -69,6 +71,6 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
           {children}
         </main>
       </div>
-    </div>
+    </AuthGate>
   );
 }

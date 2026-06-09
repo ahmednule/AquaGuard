@@ -7,6 +7,8 @@ import {
   ChevronLeft, ChevronRight, Droplets, LogOut,
   TrendingUp, Activity, Wallet, Gauge, ShieldCheck,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/apollo-auth";
 
 type NavItem = { label: string; href: string; icon: any; badge?: string };
 
@@ -52,9 +54,11 @@ const userNav = [
 
 
 
-export default function Sidebar({ role = "caretaker" }: { role?: "caretaker" | "user" }) {
+export default function Sidebar({ role = "admin" }: { role?: "admin" | "user" }) {
   const navGroups = role === "user" ? userNav : caretakerNav;
   const pathname = usePathname() || "/";
+  const router = useRouter();
+  const { signOut } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
 
   const isActive = (href: string) => {
@@ -241,13 +245,18 @@ export default function Sidebar({ role = "caretaker" }: { role?: "caretaker" | "
           <>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-slate-200 truncate">
-                {role === "user" ? "Jane Wanjiku" : "Caretaker"}
+                {role === "user" ? "Jane Wanjiku" : "Admin"}
               </p>
               <p className="text-[11px] text-slate-500 truncate">
                 {role === "user" ? "resident@aquaguard.io" : "admin@aquaguard.io"}
               </p>
             </div>
             <button
+              type="button"
+              onClick={() => {
+                signOut();
+                router.push("/login");
+              }}
               className="flex items-center justify-center rounded-[7px] text-slate-500 hover:text-slate-300 hover:bg-white/[0.06] transition-colors"
               style={{ width: 28, height: 28 }}
               title="Sign out"
@@ -262,6 +271,7 @@ export default function Sidebar({ role = "caretaker" }: { role?: "caretaker" | "
       <div className="border-t border-white/[0.06]" />
       <div className={`flex py-2.5 px-3 ${collapsed ? "justify-center" : "justify-end"}`}>
         <button
+          type="button"
           onClick={() => setCollapsed((v) => !v)}
           className="flex items-center justify-center rounded-[7px] text-slate-500 hover:text-slate-300 transition-colors"
           style={{

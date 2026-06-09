@@ -6,6 +6,7 @@ import {
   TrendingUp, CheckCircle2, AlertTriangle, Clock,
   Zap, CreditCard, BarChart3,
 } from "lucide-react";
+import { useAuth } from "@/lib/apollo-auth";
 
 const metrics = [
   { label: "Tank level",    value: "74%",     note: "~3,700 L remaining",   icon: Droplets,    trend: "stable", trendVal: "OK",    accentBg: "rgba(14,158,127,0.12)",  accent: "#3dd4b0", accentBorder: "rgba(14,158,127,0.2)"  },
@@ -54,6 +55,7 @@ const subCard = {
 };
 
 export default function UserDashboardPage() {
+  const { user } = useAuth();
   return (
     <div className="flex flex-col gap-6 max-w-[1380px]">
 
@@ -78,13 +80,13 @@ export default function UserDashboardPage() {
               style={{ color: "#93c5fd", background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.22)", padding: "4px 12px", borderRadius: 20 }}
             >
               <Sparkles size={12} />
-              Household view · Block B, Unit 04
+              Household view · {user?.community ?? "Block B, Unit 04"}
             </div>
             <h1
               className="font-extrabold text-slate-50 mb-2"
               style={{ fontSize: "clamp(24px,3.5vw,38px)", lineHeight: 1.08, letterSpacing: "-0.035em" }}
             >
-              Good morning,{"\n"}Jane 👋
+              Good morning,{"\n"}{user?.name?.split(" ")[0] ?? "Jane"} 👋
             </h1>
             <p className="text-sm text-slate-500 leading-relaxed max-w-md">
               Your tank is at 74% and water quality is excellent. Your next bill of KES 240 is due in 4 days.

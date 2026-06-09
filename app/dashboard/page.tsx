@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import {
   AlertTriangle,
   ArrowUpRight,
@@ -21,8 +21,9 @@ import {
   Wrench,
   Zap,
 } from "lucide-react";
+import { useAuth } from "@/lib/apollo-auth";
 
-type Role = "user" | "caretaker";
+type Role = "user" | "admin";
 
 const roleCopy = {
   user: {
@@ -31,8 +32,8 @@ const roleCopy = {
     subtitle: "Track tank status, water quality, and payments without digging through noise.",
     action: "Pay bill",
   },
-  caretaker: {
-    eyebrow: "Caretaker view",
+  admin: {
+    eyebrow: "Admin view",
     title: "Community-wide\noversight.",
     subtitle: "Watch all blocks, spot anomalies early, and coordinate repairs before residents are affected.",
     action: "Review incidents",
@@ -46,7 +47,7 @@ const roleMetrics = {
     { label: "Usage today",   value: "320 L",    note: "Down 8% from yesterday",      icon: Gauge,       trend: "down"   as const, trendVal: "−8%",   accent: "#93c5fd", accentBg: "rgba(59,130,246,0.12)",  accentBorder: "rgba(59,130,246,0.2)"  },
     { label: "Balance due",   value: "KES 240",  note: "Due in 4 days",               icon: Wallet,      trend: "stable" as const, trendVal: "4d",    accent: "#fcd34d", accentBg: "rgba(245,158,11,0.12)",  accentBorder: "rgba(245,158,11,0.2)"  },
   ],
-  caretaker: [
+  admin: [
     { label: "Homes online",      value: "48",        note: "2 pending reconnections", icon: Users,    trend: "up"     as const, trendVal: "+2",   accent: "#3dd4b0", accentBg: "rgba(14,158,127,0.12)",  accentBorder: "rgba(14,158,127,0.2)"  },
     { label: "Active alerts",     value: "3",         note: "1 critical, 2 warnings",  icon: Bell,     trend: "down"   as const, trendVal: "−1",   accent: "#fca5a5", accentBg: "rgba(239,68,68,0.12)",   accentBorder: "rgba(239,68,68,0.2)"   },
     { label: "Leak risk",         value: "Low",       note: "No sustained night flow",  icon: Waves,    trend: "stable" as const, trendVal: "Clear",accent: "#6ee7b7", accentBg: "rgba(16,185,129,0.12)",  accentBorder: "rgba(16,185,129,0.2)"  },
@@ -60,7 +61,7 @@ const roleAlerts = {
     { title: "Low usage streak",      detail: "Your household usage is below the community average this week.", tone: "warning"  as const, time: "1 hour ago" },
     { title: "Bill reminder",         detail: "KES 240 is pending for the current cycle.", tone: "critical" as const, time: "Today" },
   ],
-  caretaker: [
+  admin: [
     { title: "Critical contamination flag", detail: "Tank C TDS rose above safe threshold on the west line.", tone: "critical" as const, time: "4 min ago" },
     { title: "Unusual night flow",          detail: "Block 2 flow stayed active between 2:15 AM and 3:05 AM.", tone: "warning"  as const, time: "22 min ago" },
     { title: "Payment batch cleared",       detail: "8 residents paid successfully via M-Pesa this morning.", tone: "info"     as const, time: "Today" },
@@ -73,7 +74,7 @@ const roleStatusBars = {
     { label: "Water quality",    percent: 92, gradient: "linear-gradient(90deg,#059669,#6ee7b7)", status: "Excellent", statusColor: "#6ee7b7", statusBg: "rgba(16,185,129,0.12)"  },
     { label: "Usage efficiency", percent: 68, gradient: "linear-gradient(90deg,#2563eb,#93c5fd)", status: "Good",      statusColor: "#93c5fd", statusBg: "rgba(59,130,246,0.12)"  },
   ],
-  caretaker: [
+  admin: [
     { label: "Tank A", percent: 82, gradient: "linear-gradient(90deg,#0e9e7f,#3dd4b0)", status: "Healthy",  statusColor: "#3dd4b0", statusBg: "rgba(14,158,127,0.12)"  },
     { label: "Tank B", percent: 61, gradient: "linear-gradient(90deg,#d97706,#fcd34d)", status: "Monitor",  statusColor: "#fcd34d", statusBg: "rgba(245,158,11,0.12)"  },
     { label: "Tank C", percent: 24, gradient: "linear-gradient(90deg,#dc2626,#fca5a5)", status: "Critical", statusColor: "#fca5a5", statusBg: "rgba(239,68,68,0.12)"   },
@@ -89,7 +90,8 @@ const toneMap = {
 const borderTone = { critical: "#ef444460", warning: "#f59e0b60", info: "#0e9e7f60" };
 
 export default function DashboardPage() {
-  const [role, setRole] = useState<Role>("caretaker");
+  const { role: sessionRole } = useAuth();
+  const role: Role = sessionRole === "user" ? "user" : "admin";
   const copy      = roleCopy[role];
   const metrics   = useMemo(() => roleMetrics[role],   [role]);
   const alerts    = useMemo(() => roleAlerts[role],    [role]);
@@ -153,31 +155,6 @@ export default function DashboardPage() {
 
           {/* Controls */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-            {/* Role switcher */}
-            <div
-              className="inline-flex p-1 gap-0.5"
-              style={{
-                background: "rgba(255,255,255,0.05)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                borderRadius: 12,
-              }}
-            >
-              {(["caretaker", "user"] as Role[]).map((r) => (
-                <button
-                  key={r}
-                  onClick={() => setRole(r)}
-                  className="px-4 py-2 text-[13px] font-semibold rounded-[9px] transition-all duration-200"
-                  style={
-                    role === r
-                      ? { background: "rgba(14,158,127,0.85)", color: "#fff", boxShadow: "0 2px 10px rgba(14,158,127,0.3)" }
-                      : { color: "#475569" }
-                  }
-                >
-                  {r === "caretaker" ? "Caretaker" : "User"}
-                </button>
-              ))}
-            </div>
-
             <button
               className="inline-flex items-center gap-1.5 text-[13.5px] font-bold text-white transition-all duration-200 hover:-translate-y-0.5"
               style={{
@@ -311,7 +288,7 @@ export default function DashboardPage() {
               {
                 icon: Wrench,
                 title: "Maintenance queue",
-                body: role === "caretaker"
+                body: role === "admin"
                   ? "2 sensors need recalibration this week, one valve check is due tomorrow."
                   : "Your home sensors are healthy, no maintenance action required.",
                 foot: "Next window: tomorrow 9:00 AM",
@@ -319,7 +296,7 @@ export default function DashboardPage() {
               {
                 icon: ShieldCheck,
                 title: "AI insight",
-                body: role === "caretaker"
+                body: role === "admin"
                   ? "No leak pattern detected in last 24h. Monitor Tank C contamination closely."
                   : "Household consumption stable. No anomalies detected in last 24h.",
                 foot: "Model confidence: 96%",
@@ -424,17 +401,17 @@ export default function DashboardPage() {
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-slate-400">
-                  {role === "caretaker" ? "Collections this month" : "Amount due"}
+                  {role === "admin" ? "Collections this month" : "Amount due"}
                 </span>
                 <span className="text-[18px] font-extrabold text-white" style={{ letterSpacing: "-0.02em" }}>
-                  {role === "caretaker" ? "KES 82,600" : "KES 240"}
+                  {role === "admin" ? "KES 82,600" : "KES 240"}
                 </span>
               </div>
               <div className="h-1.5 rounded-full overflow-hidden mb-3" style={{ background: "rgba(255,255,255,0.06)" }}>
                 <div className="h-full w-[72%] rounded-full" style={{ background: "linear-gradient(90deg,#0e9e7f,#3dd4b0)" }} />
               </div>
               <p className="text-xs text-slate-500">
-                {role === "caretaker"
+                {role === "admin"
                   ? "72% of monthly target collected via M-Pesa."
                   : "Pay before the due date to avoid service interruption."}
               </p>
@@ -450,7 +427,7 @@ export default function DashboardPage() {
                 cursor: "pointer",
               }}
             >
-              {role === "caretaker" ? "View all transactions" : "Pay now"}
+              {role === "admin" ? "View all transactions" : "Pay now"}
               <ArrowUpRight size={14} />
             </button>
           </div>

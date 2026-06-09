@@ -4,6 +4,7 @@ import { Eye, EyeOff, Loader2, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import AuthLayout from "@/components/auth/AuthLayout";
 import { graphqlRequest, AUTH_MUTATIONS, isBackendAvailable, storeAuthCookies, type AuthResult } from "@/lib/graphql";
+import { useAuth } from "@/lib/apollo-auth";
 
 interface FormState {
   name: string;
@@ -28,6 +29,7 @@ export default function SignupPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const router = useRouter();
+  const { refreshSession } = useAuth();
 
   const handleChange = (field: keyof FormState) => (
     e: React.ChangeEvent<HTMLInputElement>
@@ -83,13 +85,20 @@ export default function SignupPage() {
         return;
       }
 
+      const sessionReady = await refreshSession();
+      if (!sessionReady) {
+        setLoading(false);
+        setError("Unable to establish your session.");
+        return;
+      }
+
       setLoading(false);
       setSuccess(true);
 
       const dest = "/dashboard";
       setTimeout(() => {
         setSuccess(false);
-        try { router.push(dest); } catch (e) { window.location.href = dest; }
+        try { router.push(dest); } catch { window.location.href = dest; }
       }, 900);
     } catch (e) {
       setLoading(false);

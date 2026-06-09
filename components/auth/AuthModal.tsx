@@ -4,6 +4,7 @@ import { X, Eye, EyeOff, Droplets, ArrowRight, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { CREDENTIALS } from "@/lib/auth";
 import { graphqlRequest, AUTH_MUTATIONS, isBackendAvailable, storeAuthCookies, type AuthResult } from "@/lib/graphql";
+import { useAuth } from "@/lib/apollo-auth";
 
 type AuthMode = "login" | "signup";
 
@@ -32,9 +33,10 @@ export default function AuthModal() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const router = useRouter();
+  const { refreshSession } = useAuth();
   const showDemoAccounts = true;
 
-  const useTestCreds = (role: "caretaker" | "user") => {
+  const useTestCreds = (role: "admin" | "user") => {
     const creds = CREDENTIALS[role];
     setForm((prev) => ({ ...prev, email: creds.email, password: creds.password }));
     setError(null);
@@ -130,9 +132,9 @@ export default function AuthModal() {
 
         storeAuthCookies(authResult.token, authResult.user.role || "user");
       } else {
-        let detectedRole: "caretaker" | "user" | null = null;
-        if (form.email === CREDENTIALS.caretaker.email && form.password === CREDENTIALS.caretaker.password) {
-          detectedRole = "caretaker";
+        let detectedRole: "admin" | "user" | null = null;
+        if (form.email === CREDENTIALS.admin.email && form.password === CREDENTIALS.admin.password) {
+          detectedRole = "admin";
         } else if (form.email === CREDENTIALS.user.email && form.password === CREDENTIALS.user.password) {
           detectedRole = "user";
         }
@@ -151,6 +153,13 @@ export default function AuthModal() {
           setLoading(false);
           return;
         }
+      }
+
+      const sessionReady = await refreshSession();
+      if (!sessionReady) {
+        setLoading(false);
+        setError("Unable to establish your session.");
+        return;
       }
 
       setLoading(false);
@@ -350,7 +359,7 @@ export default function AuthModal() {
                 <div className="space-y-2">
                   <p className="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-slate-600">Demo accounts</p>
                   {([
-                    { role: "caretaker" as const, label: "Caretaker", sub: "Community admin view",  color: "rgba(14,158,127,0.1)",  border: "rgba(14,158,127,0.2)",  textColor: "#3dd4b0" },
+                    { role: "admin" as const, label: "Admin", sub: "Community admin view",  color: "rgba(14,158,127,0.1)",  border: "rgba(14,158,127,0.2)",  textColor: "#3dd4b0" },
                     { role: "user"      as const, label: "Resident",  sub: "Household member view", color: "rgba(59,130,246,0.1)",  border: "rgba(59,130,246,0.2)",  textColor: "#93c5fd" },
                   ]).map(({ role, label, sub, color, border, textColor }) => {
                     const creds = CREDENTIALS[role];

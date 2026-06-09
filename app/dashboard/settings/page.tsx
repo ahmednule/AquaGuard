@@ -13,6 +13,7 @@ import {
   User,
 } from "lucide-react";
 import { CREDENTIALS } from "@/lib/auth";
+import { useAuth } from "@/lib/apollo-auth";
 
 const panel = { background: "rgba(255,255,255,0.032)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 18, padding: 24 };
 const subCard = { background: "rgba(255,255,255,0.022)", border: "1px solid rgba(255,255,255,0.055)", borderRadius: 12, padding: "14px 16px" };
@@ -66,9 +67,10 @@ function SettingRow({ label, sub, children }: { label: string; sub?: string; chi
 
 export default function SettingsPage() {
   const [tab, setTab] = useState<Tab>("profile");
-  const role = "caretaker";
+  const { role: sessionRole, user } = useAuth();
+  const role = sessionRole === "user" ? "user" : "admin";
   const creds = CREDENTIALS[role];
-  const isUser = false;
+  const isUser = role === "user";
 
   return (
     <div className="flex flex-col gap-6 max-w-[1380px]">
@@ -124,11 +126,11 @@ export default function SettingsPage() {
                     background: isUser ? "linear-gradient(135deg,#2563eb,#1e40af)" : "linear-gradient(135deg,#0e9e7f,#075c4a)"
                   }}
                 >
-                  {creds.name.charAt(0)}
+                  {user?.name?.charAt(0) ?? creds.name.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-slate-200">{creds.name}</p>
-                  <p className="text-xs text-slate-500">{creds.email}</p>
+                  <p className="text-sm font-semibold text-slate-200">{user?.name ?? creds.name}</p>
+                  <p className="text-xs text-slate-500">{user?.email ?? creds.email}</p>
                   <button className="text-[11.5px] font-semibold mt-1" style={{ color: isUser ? "#60a5fa" : "#3dd4b0" }}>Change photo</button>
                 </div>
               </div>

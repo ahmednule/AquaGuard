@@ -80,7 +80,7 @@ export default function UserQualityPage() {
         <div>
           <h3 className="text-sm font-bold text-blue-100 mb-1">How do we measure this?</h3>
           <p className="text-xs text-blue-200/70 leading-relaxed">
-            Measurements are taken continuously by smart sensors installed at the main reservoir for Block B. Data is refreshed every 5 minutes. If any parameter falls outside safe limits, you will be notified immediately and the caretaker will be dispatched.
+            Measurements are taken continuously by smart sensors installed at the main reservoir for Block B. Data is refreshed every 5 minutes. If any parameter falls outside safe limits, you will be notified immediately and the admin team will be dispatched.
           </p>
         </div>
       </div>
